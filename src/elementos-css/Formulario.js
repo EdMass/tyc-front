@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const colores = {
     borde: "#0075ff",
-    error: "bb2929",
+    error: "#bb2929",
     exito: "#1ed12d",
 };
 

@@ -104,11 +104,8 @@ function App() {
         <div>
           <Label htmlFor="tipo"> Tipo de documento </Label>
           <Select name="tipo" id="tipo" onChange={handleSelect} >            
-            {
-              opcionesTipo.map((item , i) => (
-                <option key={"tipo"+i} value={i} > {item.nombre}  </option>
-              ))
-            }
+          <option value="Cedula"> Cedula </option>
+          <option value="Passport"> Pasaporte </option>
           </Select>
         </div>
         <br />
@@ -132,8 +129,12 @@ function App() {
           </GrupoInput>
           {
             select === 'Cedula' && documento.valido === 'false'  
+            ? <LeyendaError> Ingrese un formato de cedula valido (01-PN-012-1234) </LeyendaError>
+            : select === 'Passport' && documento.valido === 'false' 
+            ? <LeyendaError> El numero del pasaporte debe de contener de 5 a 16 caracteres </LeyendaError>
+            : null
           }
-          <LeyendaError>Esto es un parrafo</LeyendaError>
+          
         </div>
         <br />
         <Label>
