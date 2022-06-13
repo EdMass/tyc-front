@@ -32,48 +32,38 @@ function App() {
       .catch(error => {
         console.log(error.response)
       })
-  }, [])
+  }, [])  
   
-  
-  const opcionesTipo = [
-    {
-      "nombre" : "Cedula"
-    },
-    {
-      "nombre" : "Passport"
-    }
-  ]
-
   const onChangeInput = (e) => {
     setDocumento({...documento, campo: e.target.value})
     
   }
 
   const validacionCedula = () => {
-    console.log(select + " ced");
+    //console.log(select + " ced");
     if (expresiones.cedula.test(documento.campo)) {
-      console.log("correcto");
+      //console.log("correcto");
       
       setDocumento({ ...documento, valido: 'true' });
     } else {
       console.log("incorrecto");
       setDocumento({ ...documento, valido: 'false' });
-      console.log(documento.valido)
-      console.log(documento.campo)
+      //console.log(documento.valido)
+      //console.log(documento.campo)
     }
   }
 
   const validacionPassport = () => {
-   console.log(select + " pass");
+   //console.log(select + " pass");
     if (expresiones.passport.test(documento.campo)) {
-      console.log("correcto");
-      console.log(documento.valido)
+      //console.log("correcto");
+      //console.log(documento.valido)
       setDocumento({ ...documento, valido: 'true' });
     } else {
-      console.log("incorrecto");
+      //console.log("incorrecto");
       setDocumento({ ...documento, valido: 'false' });
-      console.log(documento.valido)
-      console.log(documento.campo)
+     // console.log(documento.valido)
+      //console.log(documento.campo)
     }
         
 }
@@ -88,8 +78,22 @@ function App() {
     console.log(select + " select");
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    try {
+      const res = await axios.post(
+        'http://localhost:8080/terms/aceptar',
+        {          
+          tipoDocumento: select,
+          documento: documento.campo,          
+          versionAcep: tyc.version
+        }
+        
+      );
+      console.log(res.data)
+    } catch (error) {
+      console.log(error.response)
+    }
   }
 
   const expresiones = {
@@ -139,7 +143,7 @@ function App() {
         <br />
         <Label>
           <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>          
-          <Button type="submit" onClick={() => handleOnClik()}  >Aceptar los Terminos y Condiciones</Button>
+          <Button type="submit" onClick={() => handleOnClik()} onSubmit={handleSubmit} >Aceptar los Terminos y Condiciones</Button>
         </Label>
         {false && <MensajeError>
           <p>
