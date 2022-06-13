@@ -6,6 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import VentanaModal from "./componentes/VentanaModal.jsx";
 
 
 /*TODO: 
@@ -145,6 +146,7 @@ function App() {
           <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>          
           <Button type="submit" onClick={() => handleOnClik()} onSubmit={handleSubmit} >Aceptar los Terminos y Condiciones</Button>
         </Label>
+        <VentanaModal />
         {false && <MensajeError>
           <p>
             <FontAwesomeIcon icon={faExclamationCircle} />

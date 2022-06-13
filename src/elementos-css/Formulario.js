@@ -45,12 +45,12 @@ const Select = styled.select `
 
 const GrupoInput = styled.div `
   position: relative;
-  z-index: 90;
+  z-index: 0;  
 `;
 
 const Input = styled.input `
   width: 100%;
-  backgroud: #fff;
+  background: #fff;
   border-radius: 3px;
   height: 45px;
   line-height: 45px;
@@ -93,7 +93,7 @@ const IconoValidacion = styled(FontAwesomeIcon)
   right: 10px;
   bottom: 14px;
   z-index: 100;
-  font-size; 16px;
+  font-size: 16px;
   opacity: 0; 
 `;
 
@@ -111,7 +111,7 @@ const MensajeError = styled.div `
   height: 45px;
   line-height: 45px;
   background: #f66060;
-  padding: 0 15px
+  padding: 0 15px;
   border-radius: 3px;
   p {
     margin: 0;
