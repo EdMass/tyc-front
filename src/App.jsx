@@ -22,7 +22,9 @@ function App() {
   const [documento, setDocumento] = useState({campo: '', valido: null});
   const [isChecked, setIsChecked] = useState(false);
   const [select, setSelect] = useState('Cedula');
-  const [tyc, setTyc] = useState([])
+  const [tyc, setTyc] = useState([]);
+  const [ventana, setVentana] = useState(false)
+  const [deshabilitar, setDeshabilitar] = useState(false)
 
   useEffect(() => {
     axios.get('http://localhost:8080/terms/ultimo')
@@ -70,7 +72,10 @@ function App() {
 }
 
   const handleOnClik = () =>{
-    setIsChecked(!isChecked)
+    setIsChecked(!isChecked);
+    setVentana(!ventana);
+    console.log(isChecked);
+    setDeshabilitar(!deshabilitar)
   }
 
   
@@ -144,9 +149,15 @@ function App() {
         <br />
         <Label>
           <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>          
-          <Button type="submit" onClick={() => handleOnClik()} onSubmit={handleSubmit} >Aceptar los Terminos y Condiciones</Button>
+          <Button type="submit" onClick={() => handleOnClik()} onSubmit={handleSubmit} disabled={deshabilitar} >Aceptar los Terminos y Condiciones</Button>
         </Label>
-        <VentanaModal />
+        <VentanaModal
+          ventana = {ventana}
+          setVentana = {setVentana}
+        >
+          
+          {tyc.texto}
+        </VentanaModal>
         {false && <MensajeError>
           <p>
             <FontAwesomeIcon icon={faExclamationCircle} />
