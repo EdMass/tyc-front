@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import VentanaModal from "./componentes/VentanaModal.jsx";
+import parse from "html-react-parser";
 
 
 /*TODO: 
@@ -74,7 +75,6 @@ function App() {
   const handleOnClik = () =>{
     setIsChecked(!isChecked);
     setVentana(!ventana);
-    console.log(isChecked);
     setDeshabilitar(!deshabilitar)
   }
 
@@ -110,7 +110,7 @@ function App() {
   return (
     <>
       <Formulario className="App" onSubmit={handleSubmit}>
-        <h1> Términos y Condiciones </h1> <br />
+        <h1> Aceptar Términos y Condiciones </h1> <br />
         <div>
           <Label htmlFor="tipo"> Tipo de documento </Label>
           <Select name="tipo" id="tipo" onChange={handleSelect} >            
@@ -147,16 +147,17 @@ function App() {
           
         </div>
         <br />
-        <Label>
-          <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>          
-          <Button type="submit" onClick={() => handleOnClik()} onSubmit={handleSubmit} disabled={deshabilitar} >Aceptar los Terminos y Condiciones</Button>
-        </Label>
+        {documento.valido === 'true'  &&
+          <Label>
+            <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>  
+            <Button type="submit" onClick={() => handleOnClik()} >Aceptar los Terminos y Condiciones</Button>                
+          </Label>
+        }
         <VentanaModal
           ventana = {ventana}
           setVentana = {setVentana}
         >
-          
-          {tyc.texto}
+          {parse(tyc.texto)}
         </VentanaModal>
         {false && <MensajeError>
           <p>
