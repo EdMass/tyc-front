@@ -24,6 +24,7 @@ function App() {
   const [isChecked, setIsChecked] = useState(false);
   const [select, setSelect] = useState('Cedula');
   const [tyc, setTyc] = useState([]);
+  const [validacion, setValidacion] = useState([]);
   const [ventana, setVentana] = useState(false)
   const [deshabilitar, setDeshabilitar] = useState(false)
 
@@ -35,14 +36,36 @@ function App() {
       })
       .catch(error => {
         console.log(error.response)
+      });
+
+    axios.get(`http://localhost:9000/validador/${select}`)
+      .then(res => {
+        console.log(res);
+        //console.log(res.data.expresionRegular);
+        setValidacion(res.data)      
       })
-  }, [])  
+      .catch(error => {
+        console.log(error.response)
+      });
+  }, [select])  
   
   const onChangeInput = (e) => {
     setDocumento({...documento, campo: e.target.value})
     
   }
 
+  const validacionDocumento = () => {
+    if (regex.test(documento.campo)) {
+      //console.log("correcto");
+      
+      setDocumento({ ...documento, valido: 'true' });
+    } else {
+      //console.log("incorrecto");
+      setDocumento({ ...documento, valido: 'false' });
+    }
+  }  
+
+  /*
   const validacionCedula = () => {
     //console.log(select + " ced");
     if (expresiones.cedula.test(documento.campo)) {
@@ -50,7 +73,7 @@ function App() {
       
       setDocumento({ ...documento, valido: 'true' });
     } else {
-      console.log("incorrecto");
+      //console.log("incorrecto");
       setDocumento({ ...documento, valido: 'false' });
       //console.log(documento.valido)
       //console.log(documento.campo)
@@ -70,10 +93,9 @@ function App() {
       //console.log(documento.campo)
     }
         
-}
+}*/
 
   const handleOnClik = () =>{
-    setIsChecked(!isChecked);
     setVentana(!ventana);
     setDeshabilitar(!deshabilitar)
   }
@@ -81,11 +103,18 @@ function App() {
   
   const handleSelect = (e) => {
     setSelect(e.target.value);
+    setDocumento({ ...documento, campo: ''});
     console.log(select + " select");
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleCancelar = () => {
+    setVentana(!ventana);
+    setDocumento({ ...documento, campo: ''});
+    setDocumento({ ...documento, valido: 'false' });
+  }
+
+  const handleSubmit = async () => {    
+    //e.preventDefault();
     try {
       const res = await axios.post(
         'http://localhost:8080/terms/aceptar',
@@ -100,12 +129,24 @@ function App() {
     } catch (error) {
       console.log(error.response)
     }
+    setIsChecked(!isChecked);
+    setVentana(!ventana);
+    setDeshabilitar(!deshabilitar)
+    setDocumento({ ...documento, campo: ''});
   }
 
+  const regex = RegExp(validacion.expresionRegular)    
+  
+/*
   const expresiones = {
     cedula : /^[0-9]{2}-[PN]{2}-[0-9]{3}-[0-9]{4}$/, //01-PN-012-1234
     passport : /^[a-zA-Z0-9-]{5,16}$/
   }
+  */
+
+
+  //todo probar cambiar el onClick por el onSubmit
+  const textoTyC = `${tyc.texto}`;
 
   return (
     <>
@@ -130,8 +171,10 @@ function App() {
               id="doc" 
               value={documento.campo}
               onChange={onChangeInput}
-              onBlur={select === 'Cedula' ? validacionCedula : validacionPassport}
-              onKeyUp={select === 'Cedula' ? validacionCedula : validacionPassport}
+              //onBlur={select === 'Cedula' ? validacionCedula : validacionPassport}
+              //onKeyUp={select === 'Cedula' ? validacionCedula : validacionPassport}
+              onBlur={validacionDocumento}
+              onKeyUp={validacionDocumento}
               valido={documento.valido}
               />            
             
@@ -150,14 +193,18 @@ function App() {
         {documento.valido === 'true'  &&
           <Label>
             <input type="checkbox" name="terminos" id="terminos" disabled checked={isChecked}/>  
-            <Button type="submit" onClick={() => handleOnClik()} >Aceptar los Terminos y Condiciones</Button>                
+            <Button type="button" onClick={() => handleOnClik()} >Leer los Terminos y Condiciones</Button>                
           </Label>
-        }
+        }      
         <VentanaModal
           ventana = {ventana}
           setVentana = {setVentana}
         >
-          {parse(tyc.texto)}
+          
+          {parse(textoTyC)}
+          <br/>
+          <Button type="submit" onClick={() => handleSubmit()}>Aceptar</Button>
+          <Button type="button" onClick={() => handleCancelar()}>Cancelar</Button>
         </VentanaModal>
         {false && <MensajeError>
           <p>
